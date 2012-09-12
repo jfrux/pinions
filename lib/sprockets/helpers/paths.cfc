@@ -14,7 +14,7 @@ component {
 	* Prepend a `path` to the `paths` list.
 	* Paths at the end have the least priority.
 	**/
-	function prependPath(path) {
+	public any function prependPath(path) {
 	  this.__trail__.paths.prepend(path);
 	};
 
@@ -25,7 +25,7 @@ component {
 	* Append a `path` to the `paths` list.
 	* Paths at the beginning have a higher priority.
 	**/
-	function appendPath(path) {
+	public any function appendPath(path) {
 	  this.__trail__.paths.append(path);
 	};
 
@@ -39,7 +39,7 @@ component {
 	* completely wipe the paths list and reappend them in the order
 	* you want.
 	**/
-	function clearPaths() {
+	public any function clearPaths() {
 	  var trail = this.__trail__;
 
 	  this.paths.forEach(function (path) {

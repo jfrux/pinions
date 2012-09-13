@@ -37,7 +37,9 @@ component {
 	}
 
 	public any function getLogicalPath() {
-		var pathname = this.pathname, paths = this.environment.paths, root_path;
+		var pathname = this.pathname;
+		var paths = this.environment.paths;
+		var root_path;
 
 		root_path = _.detect(paths, function (root) {
 		return root === pathname.substr(0, root.length);
@@ -81,9 +83,9 @@ component {
 	}
 
 	public any function getEngineExtensions() {
-		var env = this.environment,
-		      exts = this.extensions,
-		      offset = exts.indexOf(this.formatExtension);
+		var env = this.environment;
+		var  exts = this.extensions;
+		var offset = exts.indexOf(this.formatExtension);
 
 		  if (0 <= offset) {
 		    exts = exts.slice(offset + 1);
@@ -98,9 +100,11 @@ component {
 	}
 
 	public any function getProcessors() {
-		return [].concat(this.environment.getPreProcessors(this.contentType),
-                   this.engines.reverse(),
-                   this.environment.getPostProcessors(this.contentType));
+		var arr = [];
+		arr.addAll(this.environment.getPreProcessors(this.contentType));
+        arr.addAll(this.engines.reverse());
+        arr.addAll(this.environment.getPostProcessors(this.contentType));
+		return arr;
 	}
 
 	public any function getContentType() {

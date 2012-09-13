@@ -16,7 +16,7 @@ component accessors=true {
 	property name="__trail__"
 			type="any";
 
-	public any function init(parentClass) {
+	public any function init() {
 		variables._ = new Underscore();
 		this.paths = [];
 		return this;

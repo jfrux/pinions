@@ -10,4 +10,8 @@ component {
 		
 		return this;
 	}
+
+	public any function registerMimeType() {
+		
+	}
 }

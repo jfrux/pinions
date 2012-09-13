@@ -6,9 +6,47 @@
 component extends="hike" {
 	import "vendor.underscore";
 	import "vendor.path";
-	public any function init() {
+	/**
+	* new Index(root, paths, extensions, aliases)
+	**/
+	public any function init(root, paths, extensions, aliases) {
+		/** internal, read-only
+		* Index#root -> String
+		*
+		* Root path. This attribute is immutable.
+		**/
+		this.root = arguments.root;
 
-		return this;
+		// Freeze is used here so an error is throw if a mutator method
+		// is called on the array. Mutating `paths`, `extensions`, or
+		// `aliases` would have unpredictable results.
+
+		/** read-only
+		* Index#paths -> Paths
+		*
+		* Immutable (frozen) [[Paths]] collection.
+		**/
+		this.paths = arguments.paths.clone();
+
+		/** read-only
+		* Index#extensions -> Extensions
+		*
+		* Immutable (frozen) [[Extensions]] collection.
+		**/
+		this.extensions = arguments.extensions.clone();
+
+		/** read-only
+		* Index#aliases -> Aliases
+		*
+		* Immutable map of aliases.
+		**/
+		this.aliases = arguments.aliases.clone();
+
+		// internal cache
+
+		this.__entries__ = {};
+		this.__patterns__ = {};
+		this.__stats__ = {};
 	}
 
 
@@ -89,7 +127,7 @@ component extends="hike" {
 
 	  while (matches.length && undefined === ret) {
 	    pathname = path.join(dirname, matches.shift());
-	    stats = self.stat(pathname);
+	    stats = getFileInfo(pathname);
 
 	    if (stats && stats.isFile()) {
 	      ret = fn(pathname);
@@ -139,48 +177,7 @@ component extends="hike" {
 	// PUBLIC //////////////////////////////////////////////////////////////////////
 
 
-	/**
-	* new Index(root, paths, extensions, aliases)
-	**/
-	public any function init(root, paths, extensions, aliases) {
-		/** internal, read-only
-		* Index#root -> String
-		*
-		* Root path. This attribute is immutable.
-		**/
-		this.root = arguments.root;
-
-		// Freeze is used here so an error is throw if a mutator method
-		// is called on the array. Mutating `paths`, `extensions`, or
-		// `aliases` would have unpredictable results.
-
-		/** read-only
-		* Index#paths -> Paths
-		*
-		* Immutable (frozen) [[Paths]] collection.
-		**/
-		this.paths = arguments.paths.clone().freeze();
-
-		/** read-only
-		* Index#extensions -> Extensions
-		*
-		* Immutable (frozen) [[Extensions]] collection.
-		**/
-		this.extensions = arguments.extensions.clone().freeze();
-
-		/** read-only
-		* Index#aliases -> Aliases
-		*
-		* Immutable map of aliases.
-		**/
-		this.aliases = arguments.aliases.clone().freeze();
-
-		// internal cache
-
-		this.__entries__ = {};
-		this.__patterns__ = {};
-		this.__stats__ = {};
-	}
+	
 
 
 	/**
@@ -188,7 +185,7 @@ component extends="hike" {
 	*
 	* Self-reference to be compatable with the [[Trail]] interface.
 	**/
-	public any function get() {
+	public any function getIndex() {
 		return this;
 	};
 
@@ -267,10 +264,12 @@ component extends="hike" {
 	* Retuns `null` if file does not exists.
 	**/
 	public any function stat(pathname) {
-	  if (null !== this.__stats__[pathname]) {
+		//writeDump(pathname[1]);
+	  if (!isDefined("theIndex.__stats__[pathname]")) {
 	    try {
-	      this.__stats__[pathname] = null;
-	      this.__stats__[pathname] = fs.statSync(pathname);
+	    	//writeDump(var=pathname,abort=true);
+	      theIndex.__stats__[pathname] = "";
+	      theIndex.__stats__[pathname] = GetFileInfo(pathname);
 	    } catch (err) {
 	      if ('ENOENT' !== err.code) {
 	        throw err;
@@ -278,7 +277,7 @@ component extends="hike" {
 	    }
 	  }
 
-	  return this.__stats__[pathname];
+	  return theIndex.__stats__[pathname];
 	};
 }
 

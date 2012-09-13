@@ -22,8 +22,8 @@ component extends="hike" {
 	 *  Return copy of the instance.
 	 **/
 	public any function clone() {
-	  var obj = new Paths(this.__root__);
-	  obj.prepend(this.toArray());
+	  var obj = this.init(this.__root__);
+	  obj.prepend(_.toArray(this));
 	  return obj;
 	};
 

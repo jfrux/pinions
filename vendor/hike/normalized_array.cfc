@@ -4,6 +4,7 @@
 */
 component extends="hike" accessors=true {
 	import "vendor.underscore";
+	import "vendor.hike.common";
 
 	property name="frozen"
 			type="boolean"
@@ -15,7 +16,7 @@ component extends="hike" accessors=true {
 		self = this;
 		this.arr = [];
 		variables._ = new vendor.underscore();
-
+		variables.common = new Common();
 		return this;
 	}
 
@@ -38,7 +39,7 @@ component extends="hike" accessors=true {
 	* prepend('foo', 'bar');
 	**/
 	  public any function prepend() {
-	    this.arr = _.union(normalize_all(arguments), this.arr);
+	    this.arr = _.union(this.normalize_all(arguments), this.arr);
 	  };
 
 
@@ -76,7 +77,7 @@ component extends="hike" accessors=true {
 	* Returns `-1` when element not found.
 	**/
 	  public any function indexOf(element) {
-	    return this.arr.indexOf(this.normalize(element));
+	    return _.indexOf(this.arr,this.normalize(element));
 	  };
 
 
@@ -86,7 +87,7 @@ component extends="hike" accessors=true {
 	* Returns Array value of [[NormalizedArray]]
 	**/
 	  public any function toArray() {
-	    return this.arr.slice();
+	    return _.toArray(this.arr);
 	  };
 
 
@@ -98,6 +99,7 @@ component extends="hike" accessors=true {
 	**/
 	  public any function freeze() {
 	    frozen = true;
+	    stub = new Common().stub;
 	    stub(this, ['prepend', 'append', 'remove'], "Frozen object.");
 	    return this;
 	  };

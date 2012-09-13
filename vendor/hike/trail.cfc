@@ -21,19 +21,15 @@ component accessors=true extends="hike" {
 			getter=true
 			setter=true; 
 
-
-
 	property name="extensions"
 		getter=true
 		setter=true;
 
-property name="aliases"
+	property name="aliases"
 		getter=true
 		setter=true;
 
-	property name="index"
-	getter=true
-	setter=true;
+	property name="index";
 
 	public any function init(root = "") {
 		variables._ = new Underscore();
@@ -43,22 +39,25 @@ property name="aliases"
 		this.paths = new Paths(this.root);
 		this.extensions = new Extensions();
 		this.aliases = new Aliases();
-		this.index = new Index();
-		
+		this.index = getIndex();
 
 		return this;
 	}
 
+	public any function getIndex() {
+		return new Index(this.root, this.paths, this.extensions, this.aliases);
+	}
+
 
 	function index_proxy(proto, func) {
-		self = this;
 		loc = {};
 		loc.proto = arguments.proto;
 		loc.func = arguments.func;
 		
-		loc.proto[loc.func] = function () {
-			var index = self.index;
-			return index[loc.func](index, arguments);
+		loc.proto[loc.func] = function() {
+			var index = this.index;
+
+			return index[loc.func](pathname=this.root);
 		};
 	}
 

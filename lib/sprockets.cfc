@@ -41,7 +41,7 @@ component {
 
 	public any function init() {
 		variables._ = new Underscore();
-		this["__trail__"] = new Trail(expandPath('/'));
+		this["__trail__"] = new Trail('/');
 		this["__engines__"] = {};
 		this["__mimeTypes__"] = new vendor.Mime();
 		this["__preProcessors__"] = {};

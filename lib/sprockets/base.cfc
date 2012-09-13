@@ -17,10 +17,47 @@ component accessors=true {
 		variables._ = new Underscore();
 		
 		//mixin internal functions into this cfc
-		this = _.extend(new Paths());
+		this = _.extend(this,new Paths());
 		this = _.extend(this,new Mime());
 		this = _.extend(this,new Processing());
 		this = _.extend(this,new Engines());
+
+			//
+			// override [[Paths]] mixin methods
+			//
+			attr_with_expire_index('digestAlgorithm', 'md5');
+
+			attr_with_expire_index('version', '');
+			func_proxy_with_expire_index('prependPath');
+			func_proxy_with_expire_index('appendPath');
+			func_proxy_with_expire_index('clearPaths');
+
+			//
+			// override [[Mime]] mixin methods
+			//
+
+			func_proxy_with_expire_index('registerMimeType', function (mimeType, ext) {
+			  this.__trail__.extensions.append(ext);
+			});
+
+			//
+			// override [[Engines]] mixin methods
+			//
+
+			func_proxy_with_expire_index('registerEngine', function (ext, klass) {
+			  this.addEngineToTrail(ext, klass);
+			});
+
+			//
+			// override [[Processing]] mixin methods
+			//
+
+			func_proxy_with_expire_index('registerPreprocessor');
+			func_proxy_with_expire_index('registerPostprocessor');
+			func_proxy_with_expire_index('registerBundleProcessor');
+			func_proxy_with_expire_index('unregisterPreprocessor');
+			func_proxy_with_expire_index('unregisterPostprocessor');
+			func_proxy_with_expire_index('unregisterBundleProcessor');
 
 		return this;
 	}
@@ -42,23 +79,21 @@ component accessors=true {
 	  }
 	}
 
-	attr_with_expire_index('digestAlgorithm', 'md5');
-
-	attr_with_expire_index('version', '');
+	
 
 
 	function func_proxy_with_expire_index(name, func) {
-	  // var orig = this[name];
+	  var orig = this[name];
 
-	  // this[name] = function () {
-	  //   this.expireIndex();
+	  this[name] = function () {
+	    this.expireIndex();
 	    
-	  //   if (func) {
-	  //     func(argumentCollection=arguments);
-	  //   }
+	    if (func) {
+	      func(argumentCollection=arguments);
+	    }
 
-	  //   orig(argumentCollection=arguments);
-	  // };
+	    orig(argumentCollection=arguments);
+	  };
 	}
 
 	public any function getDigest() {
@@ -73,40 +108,7 @@ component accessors=true {
 		  return digest;
 	}
 
-	//
-	// override [[Paths]] mixin methods
-	//
 
-	func_proxy_with_expire_index('prependPath');
-	func_proxy_with_expire_index('appendPath');
-	func_proxy_with_expire_index('clearPaths');
-
-	//
-	// override [[Mime]] mixin methods
-	//
-
-	func_proxy_with_expire_index('registerMimeType', function (mimeType, ext) {
-	  this.__trail__.extensions.append(ext);
-	});
-
-	//
-	// override [[Engines]] mixin methods
-	//
-
-	func_proxy_with_expire_index('registerEngine', function (ext, klass) {
-	  this.addEngineToTrail(ext, klass);
-	});
-
-	//
-	// override [[Processing]] mixin methods
-	//
-
-	func_proxy_with_expire_index('registerPreprocessor');
-	func_proxy_with_expire_index('registerPostprocessor');
-	func_proxy_with_expire_index('registerBundleProcessor');
-	func_proxy_with_expire_index('unregisterPreprocessor');
-	func_proxy_with_expire_index('unregisterPostprocessor');
-	func_proxy_with_expire_index('unregisterBundleProcessor');
 
 	/**
 	* resolve(logicalPath[, options = {}[, fn]]) -> String
@@ -197,7 +199,7 @@ component accessors=true {
 	* Returns a `AssetAttributes` for `pathname`
 	**/
 	public any function attributesFor(pathname) {
-	  return new AssetAttributes(this, pathname);
+	  return new asset_attributes(this, arguments.pathname);
 	};
 
 
@@ -331,28 +333,29 @@ component accessors=true {
 	public any function eachEntry(root, iterator) {
 	  var self = this;
 	  var paths = [];
+	  path = new Path();
 
-	  this.entries(root).forEach(function (filename) {
+	  _.each(this.entries(root),function (filename) {
 	    var pathname = path.join(root, filename);
 	    var stats = self.stat(pathname);
 
-	    if (!stats) {
+	    if (!isDefined('stats')) {
 	      // File not found - silently skip it.
 	      // It might happen only if we got "broken" symlink in real life.
 	      // See https://github.com/nodeca/mincer/issues/18
 	      return;
 	    }
 
-	    paths.push(pathname);
+	    paths.add(pathname);
 
-	    if (stats.isDirectory()) {
+	    if (directoryExists(pathname)) {
 	      self.eachEntry(pathname, function (subpath) {
-	        paths.push(subpath);
+	        paths.add(subpath);
 	      });
 	    }
 	  });
 
-	  paths.sort().forEach(iterator);
+	  _.each(ArraySort(paths,"text"),iterator);
 	};
 
 
@@ -366,7 +369,7 @@ component accessors=true {
 	  var self = this;
 	  _.each(this.__trail__.paths,function (root) {
 	    self.eachEntry(root, function (pathname) {
-	      if (!self.stat(pathname).isDirectory()) {
+	      if (!directoryExists(pathname)) {
 	        iterator(pathname);
 	      }
 	    });
@@ -410,7 +413,7 @@ component accessors=true {
 
 	// Returns logicalPath for `filename` if it mtches given filters
 	function logical_path_for_filename(self, filters, filename) {
-	  var logical_path = self.attributesFor(filename).logicalPath;
+	  var logical_path = self.attributesFor(filename).getlogicalPath();
 
 	  if (matches_filter(filters, logical_path)) {
 	    return logical_path;
@@ -441,7 +444,7 @@ component accessors=true {
 	  var files = {};
 
 	  this.eachFile(function (filename) {
-	    var logical_path = logical_path_for_filename(self, filters, filename);
+	    var logical_path = this.logical_path_for_filename(self, filters, filename);
 	    if (logical_path && !files[logical_path]) {
 	      iterator(logical_path);
 	      files[logical_path] = true;

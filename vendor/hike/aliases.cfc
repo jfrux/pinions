@@ -1,11 +1,11 @@
-import "vendor/Underscore";
-import "extensions";
-
 /**
 * @name Aliases
 * @hint 
 */
-component accessors=true {
+component extends="hike" accessors=true {
+	import "vendor.Underscore";
+	import "extensions";
+
 	property name="frozen"
 			type="boolean"
 			getter="true"
@@ -15,7 +15,7 @@ component accessors=true {
 			type="struct";
 
 	public any function init() {
-
+		
 		return this;
 	}
 

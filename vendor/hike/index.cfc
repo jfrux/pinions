@@ -1,11 +1,11 @@
-import "vendor/underscore"
-import "vendor/path"
 /**
 * 
 * @name Index
 * @hint 
 */
-component {
+component extends="hike" {
+	import "vendor.underscore";
+	import "vendor.path";
 	public any function init() {
 
 		return this;

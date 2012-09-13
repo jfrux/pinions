@@ -1,10 +1,10 @@
 /**
-* @name Common.cfc
-* @hint 
+* @name Mixin.cfc
 */
-component extends="hike" {
+component {
 	public any function init() {
 
 		return this;
 	}
+
 }

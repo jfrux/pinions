@@ -1,15 +1,13 @@
-import "vendor/Underscore";
-import "index";
-import "paths";
-import "extensions";
-import "common";
-import "aliases";
-
 /**
 * @name Trail
 * @hint Public container class for holding paths and extensions.
 */
-component accessors=true {
+component accessors=true extends="hike" {
+	import "vendor.underscore";
+	import "vendor.path";
+	import "vendor.hike.paths";
+	import "vendor.hike.extensions";
+	import "vendor.hike.index";
 	/**
 	* @getter false
 	* @setter false
@@ -20,48 +18,129 @@ component accessors=true {
 
 	property name="paths"
 			type="any"
-			getter="true"
-			setter="true"; 
+			getter=true
+			setter=true; 
 
 
-	/**
-	* @getter true
-	* @setter true
-	**/
-	property any extensions;
 
-	/**
-	* @getter true
-	* @setter true
-	**/
-	property any aliases;
+	property name="extensions"
+		getter=true
+		setter=true;
 
-	/**
-	* @getter true
-	* @setter true
-	**/
-	property any index;
+property name="aliases"
+		getter=true
+		setter=true;
 
-	public any function init(root) {
-		this.root = arguments.root;
-		// _ is referenced throughout this cfc
-		variables._ = new vendor.Underscore();
-		this.setPaths(new Paths(this.root));
-		this.setExtensions(new Extensions());
-		this.setAliases(new Aliases());
-		this.setIndex(new Index());
+	property name="index"
+	getter=true
+	setter=true;
+
+	public any function init(root = "") {
+		variables._ = new Underscore();
+		variables.path = new Path();
+		this.root = path.resolve((!_.isEmpty(arguments.root))? arguments.root : "");
+		
+		this.paths = new Paths(this.root);
+		this.extensions = new Extensions();
+		this.aliases = new Aliases();
+		this.index = new Index();
 		
 
 		return this;
 	}
 
 
+	function index_proxy(proto, func) {
+		self = this;
+		loc = {};
+		loc.proto = arguments.proto;
+		loc.func = arguments.func;
+		
+		loc.proto[loc.func] = function () {
+			var index = self.index;
+			return index[loc.func](index, arguments);
+		};
+	}
+
+	/**
+	* Trail#find(logical_paths[, options][, fn]) -> String
+	* - logical_paths (String|Array): One or many (fallbacks) logical paths.
+	* - options (Object): Options hash. See description below.
+	* - fn (Function): Block to execute on each matching path. See description below.
+	*
+	* Returns the expanded path for a logical path in the path collection.
+	*
+	* trail = new Trail("/home/ixti/Projects/hike-js");
+	*
+	* trail.extensions.append(".js");
+	* trail.paths.append("lib", "test");
+	*
+	* trail.find("hike/trail");
+	* // -> "/home/ixti/Projects/hike-js/lib/hike/trail.js"
+	*
+	* trail.find("test_trail");
+	* // -> "/home/ixti/Projects/hike/test/test_trail.js"
+	*
+	* `find` accepts multiple fallback logical paths that returns the
+	* first match.
+	*
+	* trail.find(["hike", "hike/index"]);
+	*
+	* is equivalent to
+	*
+	* trail.find("hike") || trail.find("hike/index");
+	*
+	* Though `find` always returns the first match, it is possible
+	* to iterate over all shadowed matches and fallbacks by supplying
+	* a _block_ function (`fn`).
+	*
+	* trail.find(["hike", "hike/index"], function (path) {
+	* console.warn(path);
+	* });
+	*
+	* This allows you to filter your matches by any condition.
+	*
+	* trail.find("application", function (path) {
+	* if ("text/css" == mime_type_for(path)) {
+	* return path;
+	* }
+	* });
+	*
+	*
+	* ##### Options
+	*
+	* - **basePath** (String): You can specify "alternative" _base path_ to be
+	* used upon searching. Default: [[Trail#root]].
+	*
+	* ##### Block function
+	*
+	* Some kind of iterator that is called on each matching pathname. Once this
+	* function returns anything but `undefned` - iteration is stopped and the
+	* value of this function returned.
+	*
+	* Default:
+	*
+	* function (path) { return path; }
+	**/
+	index_proxy(this, 'find');
+
+
+	/**
+	* Trail#entries(pathname) -> Array
+	*
+	* Wrapper over [[Index#entries]] using one-time instance of [[Trail#index]].
+	**/
+	index_proxy(this, 'entries');
+
+
+	/**
+	* Trail#stat(pathname) -> Stats|Null
+	*
+	* Wrapper over [[Index#stat]] using one-time instance of [[Trail#index]].
+	**/
+	index_proxy(this, 'stat');
 	
 }
 
-function index_proxy(proto, func) {
-  proto[func] = function () {
-    var index = this.index;
-    return index[func].apply(index, arguments);
-  };
-}
+
+

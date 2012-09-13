@@ -17,7 +17,7 @@ component {
 	*   @author S. Isaac Dealey (info@turnkey.to) 
 	*/
 	public string function normalize(p) {
-		return CreateObject("java","java.io.File").init(filePath).getCanonicalPath();
+		return createObject("java","java.io.File").init(arguments.p).getCanonicalPath();
 	}
 
 	/**
@@ -27,15 +27,14 @@ component {
 	* 	@author Alexander Sicular &amp; Raymond Camden
 	*/
 	public string function extname(p) {
-		if(find(".",name)) return listLast(name,".");
+		if(find(".",arguments.p)) return listLast(arguments.p,".");
 		else return "";
 	}
 
 	/**
-	* 	@header path.resolve(p)
-	*	@hint Return the extension of the path, from the last '.' to end of string in the last portion of the path. If there is no '.' in the last portion of the path or the first character of it is '.', then it returns an empty string. Examples: 
-	* 	@example path.extname('index.html')<br />// returns<br />'.html'<br /><br />path.extname('index.')<br />// returns<br />'.'<br /><br />path.extname('index')<br />// returns<br />''
-	* 	@author Alexander Sicular &amp; Raymond Camden
+	* 	@header path.resolve([from ...], to)
+	*	@hint Resolves to <pre>to</pre> an absolute path.<br><br>If to isn't already absolute from arguments are prepended in right to left order, until an absolute path is found. If after using all from paths still no absolute path is found, the current working directory is used as well. The resulting path is normalized, and trailing slashes are removed unless the path gets resolved to the root directory. Non-string arguments are ignored.<br><br>Another way to think of it is as a sequence of cd commands in a shell. 
+	* 	@example path.resolve('/foo/bar', './baz')<br />// returns<br />'/foo/bar/baz'<br /><br />path.resolve('/foo/bar', '/tmp/file/')<br />// returns<br />'/tmp/file'<br /><br />path.resolve('wwwroot', 'static_files/png/', '../gif/image.gif')<br />// if currently in /home/myself/node, it returns'/home/myself/node/wwwroot/static_files/gif/image.gif'
 	*/
 	public string function resolve() {
 		var resolvedPath = '';
@@ -43,7 +42,7 @@ component {
 
 	    for (var i = arrayLen(structKeyArray(arguments)); i >= 1 && !resolvedAbsolute; i--) {
 	      var path = (i >= 1) ? arguments[i] : GetContextRoot();
-	      writeDump(arguments[i]);
+	      
 	      // Skip empty and invalid entries
 	      if (NOT _.isString(path) || NOT _.isEmpty(path)) {
 	        continue;
@@ -52,19 +51,7 @@ component {
 	      resolvedPath = expandPath(path & '/' & resolvedPath);
 	      resolvedAbsolute = isAbsolute(path);
 	    }
-	    writeDump(var=resolvedAbsolute);
-	    // At this point the path should be resolved to a full absolute path, but
-	    // handle relative paths to be safe (might happen when process.cwd() fails)
-	    writeDump(var=resolvedPath,abort=true);
-	    // Normalize the path
-	    resolvedPath = arrayToList(
-	    		normalizeArray(
-	    			ArrayFilter(
-	    				listToArray(resolvedPath,'/'),
-    					function(p) {
-					      return !!p;
-					    }), !resolvedAbsolute),'/');
-	    //writeDump(var=((resolvedAbsolute ? '/' : '') & resolvedPath),abort=true);
+
 	    return resolvedPath;
 	}
 

@@ -1,25 +1,16 @@
-import "sprockets/engines/coffee";
-import "sprockets/engines/ejs";
-import "sprockets/engines/haml_coffee";
-import "sprockets/engines/jade";
-import "sprockets/engines/jst";
-import "sprockets/engines/less";
-import "sprockets/engines/stylus";
-import "sprockets/processors/charset_normalizer";
-import "sprockets/processors/debug_comments";
-import "sprockets/processors/directive_processor";
-import "sprockets/processors/safety_colons";
-import "sprockets/server";
-import "sprockets/environment";
-import "vendor/mime";
-		
-/**
+/** 
 * @name Sprockets.cfc
 * @hint A port of Sprockets(ruby) for Coldfusion
 */
 component {
-	// Main exported properties ////////////////////////////////////////////////////
+	import "vendor.*";
+	import "vendor.hike.*";
+	import "sprockets.helpers.*";
+	import "sprockets.engines.*";
+	import "sprockets.processors.*";
+	import "sprockets.*";
 	
+	// Main exported properties ////////////////////////////////////////////////////
 	property name="VERSION" type="string" getter=true setter=false;
 
 	this.VERSION = new sprockets.version();
@@ -49,55 +40,56 @@ component {
 	property name="__bundleProcessors__" type="struct";
 
 	public any function init() {
-		variables._ = new vendor.underscore();
-		this["__trail__"] = new vendor.hike.Trail();
+		variables._ = new Underscore();
+		this["__trail__"] = new Trail(expandPath('/'));
 		this["__engines__"] = {};
 		this["__mimeTypes__"] = new vendor.Mime();
 		this["__preProcessors__"] = {};
 		this["__postProcessors__"] = {};
 		this["__bundleProcessors__"] = {};
+		this.paths = [];
 
 		// Engines /////////////////////////////////////////////////////////////////////
 		/**
 		* this.EjsEngine -> EjsEngine
 		**/
-		this.EjsEngine = new sprockets.engines.ejs();
+		this.EjsEngine = new ejs();
 
 
 		/**
 		* this.HamlCoffeeEngine -> HamlCoffeeEngine
 		**/
-		this.HamlCoffeeEngine = new sprockets.engines.haml_coffee();
+		this.HamlCoffeeEngine = new haml_coffee();
 
 
 		/**
 		* this.JadeEngine -> JadeEngine
 		**/
-		this.JadeEngine = new sprockets.engines.jade();
+		this.JadeEngine = new jade();
 
 
 		/**
 		* this.JstEngine -> JstEngine
 		**/
-		this.JstEngine = new sprockets.engines.jst();
+		this.JstEngine = new jst();
 
 
 		/**
 		* this.LessEngine -> LessEngine
 		**/
-		this.LessEngine = new sprockets.engines.less();
+		this.LessEngine = new less();
 
 
 		/**
 		* this.StylusEngine -> StylusEngine
 		**/
-		this.StylusEngine = new sprockets.engines.stylus();
+		this.StylusEngine = new stylus();
 
 
 		/**
 		* this.CoffeeEngine -> CoffeeEngine
 		**/
-		this.CoffeeEngine = new sprockets.engines.coffee();
+		this.CoffeeEngine = new coffee();
 
 
 		// Processors //////////////////////////////////////////////////////////////////
@@ -106,25 +98,25 @@ component {
 		/**
 		* this.DebugComments -> DebugComments
 		**/
-		this.DebugComments = new sprockets.processors.debug_comments();
+		this.DebugComments = new debug_comments();
 
 
 		/**
 		* this.DirectiveProcessor -> DirectiveProcessor
 		**/
-		this.DirectiveProcessor = new sprockets.processors.directive_processor();
+		this.DirectiveProcessor = new directive_processor();
 
 
 		/**
 		* this.CharsetNormalizer -> CharsetNormalizer
 		**/
-		this.CharsetNormalizer = new sprockets.processors.charset_normalizer();
+		this.CharsetNormalizer = new charset_normalizer();
 
 
 		/**
 		* this.SafetyColons -> SafetyColons
 		**/
-		this.SafetyColons = new sprockets.processors.safety_colons();
+		this.SafetyColons = new safety_colons();
 
 
 		// Main exported classes ///////////////////////////////////////////////////////
@@ -145,13 +137,13 @@ component {
 		/**
 		* this.Template -> Template
 		**/
-		this.Template = new sprockets.template();
+		this.Template = new template();
 
 
 		/**
 		* this.Server -> Server
 		**/
-		this.Server = new sprockets.server();
+		this.Server = new server();
 
 
 		// Main exported functions /////////////////////////////////////////////////////
@@ -165,10 +157,10 @@ component {
 
 
 		// mixin helpers
-		_.extend(this,new sprockets.helpers.engines());
-		_.extend(this,new sprockets.helpers.mime());
-		_.extend(this,new sprockets.helpers.processing());
-		_.extend(this,new sprockets.helpers.paths());
+		this = _.extend(this,new lib.sprockets.helpers.engines());
+		this = _.extend(this,new lib.sprockets.helpers.mime());
+		this = _.extend(this,new lib.sprockets.helpers.processing());
+		this = _.extend(this,new lib.sprockets.helpers.paths());
 
 		return this;
 	}

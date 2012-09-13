@@ -13,4 +13,9 @@ component {
 		this.Trail = createObject("component","hike.trail");
 		return this;
 	}
+
+	public any function extends(baseClass,otherClass) {
+		var base = createObject("component",baseClass);
+		
+	}
 }

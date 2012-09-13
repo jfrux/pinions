@@ -1,10 +1,24 @@
 /**
 * @name Paths.cfc
-* @hint 
+* @hint An internal mixin whose public methods are exposed on the [[Environment]] and [[Index]] classes.<br/>Provides helpers to work with `Hike.Trail` instance. 
+* @usage internal 
+* @type mixin
 */
-component {
-	public any function init() {
-		
+component accessors=true {
+	import "vendor.underscore";
+	import "vendor.hike.trail";
+
+	property name="root"
+			type="string";
+	property name="paths"
+			type="any"
+			default="";
+	property name="__trail__"
+			type="any";
+
+	public any function init(parentClass) {
+		variables._ = new Underscore();
+		this.paths = [];
 		return this;
 	}
 
@@ -47,5 +61,11 @@ component {
 	  });
 	};
 
+	public any function getPaths() {
+	  return _.toArray(this.__trail__.paths);
+	};
+	public any function getRoot() {
+	  return this.__trail__.root;
+	};
 
 }

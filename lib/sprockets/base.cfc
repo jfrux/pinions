@@ -1,35 +1,27 @@
-import "vendor/underscore";
-import "version";
-import "asset_attributes";
-import "assets/static";
-import "assets/processed";
-import "assets/bundled";
-
-//HELPERS
-import "helpers/paths";
-import "helpers/mime";
-import "helpers/processing";
-import "helpers/engines";
-
-import "vendor/path";
 /*
 * @name Base.cfc
 * @hint 
 */
-component {
-	public any function init() {
-		paths = new helpers.paths();
-		mime = new helpers.mime();
-		processing = new helpers.processing();
-		engines = new helpers.engines();
-		variables.path = new vendor.Path();
-		variables._ = new vendor.Underscore();
+component accessors=true {
+	import "vendor.Underscore";
+	import "vendor.Path";
+	import "vendor.hike.trail";
+	import "version";
+	import "asset_attributes";
+	import "assets.*";
+	import "helpers.*";
 
-		_.extend(this,paths);
-		_.extend(this,mime);
-		_.extend(this,processing);
-		_.extend(this,engines);
-		writeDump(var=this,abort=true);
+	public any function init() {
+		//3rd party
+		variables.path = new Path();
+		variables._ = new Underscore();
+		
+		//mixin internal functions into this cfc
+		this = _.extend(new Paths());
+		this = _.extend(this,new Mime());
+		this = _.extend(this,new Processing());
+		this = _.extend(this,new Engines());
+
 		return this;
 	}
 
@@ -56,17 +48,17 @@ component {
 
 
 	function func_proxy_with_expire_index(name, func) {
-	  var orig = this[name];
+	  // var orig = this[name];
 
-	  this[name] = function () {
-	    this.expireIndex();
+	  // this[name] = function () {
+	  //   this.expireIndex();
 	    
-	    if (func) {
-	      func(argumentCollection=arguments);
-	    }
+	  //   if (func) {
+	  //     func(argumentCollection=arguments);
+	  //   }
 
-	    orig(argumentCollection=arguments);
-	  };
+	  //   orig(argumentCollection=arguments);
+	  // };
 	}
 
 	public any function getDigest() {
@@ -372,8 +364,7 @@ component {
 	**/
 	public any function eachFile(iterator) {
 	  var self = this;
-
-	  this.paths.forEach(function (root) {
+	  _.each(this.__trail__.paths,function (root) {
 	    self.eachEntry(root, function (pathname) {
 	      if (!self.stat(pathname).isDirectory()) {
 	        iterator(pathname);
@@ -462,12 +453,12 @@ component {
 	// circular call protection helper.
 	// keeps array of required pathnames until the function
 	// that originated protection finishes it's execution
-	var circular_calls = null;
+	circular_calls = [];
 	function circular_call_protection(pathname, callback) {
-	  var reset = (null === circular_calls);
+	  var reset = (_.isEmpty(circular_calls));
 	 var calls = circular_calls || (circular_calls = []);
-	var result = null;
-	 var error = null;
+	var result;
+	 var error;
 
 	  if (0 <= calls.indexOf(pathname)) {
 	    if (reset) { circular_calls = null; }

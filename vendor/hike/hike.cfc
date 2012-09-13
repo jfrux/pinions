@@ -10,6 +10,7 @@ component {
 	  "extended",
 	  "included"
 	];
+	
 	import "vendor.underscore";
 	import "hike.trail";
 	property name="Trail" type="any";

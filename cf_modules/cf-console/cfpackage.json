@@ -1,0 +1,11 @@
+{
+	"name": "cf-console",
+	"version": "0.0.0",
+	"author": "Joshua F. Rountree",
+	"dependencies":{
+
+	},
+	"java_dependencies":{
+		"jlibs":""
+	}
+}

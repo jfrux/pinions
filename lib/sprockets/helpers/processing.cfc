@@ -9,23 +9,27 @@ component accessors=true {
 		return this;
 	}
 
-
 	public any function registerPreprocessor() {
 		
 	}
+
 	public any function registerPostprocessor() {
 		
 	}
+
 	public any function registerBundleprocessor() {
 		
 	}
+
 	public any function unregisterPreprocessor() {
 		
 	}
+
 	public any function unregisterPostProcessor() {
 		
 	}
-	public any function unregisterBundleprocessor() {
+	
+	public any function unregisterBundleProcessor() {
 		
 	}
 }

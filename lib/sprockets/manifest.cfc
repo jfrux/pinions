@@ -3,8 +3,8 @@
 * @hint 
 */
 component accessors=true {
-	import "vendor.underscore";
-	import "vendor.path";
+	import "cf_modules.UnderscoreCF.underscore";
+	import "cf_modules.cf-path.path";
 
 	property name="environment"
 	type="environment"
@@ -31,7 +31,7 @@ component accessors=true {
 
 		this.environment = arguments.environment;
 		
-		if('' === path.extname(arguments.pathname)) {
+		if('' EQ path.extname(arguments.pathname)) {
 			this.setDir(path.resolve(arguments.pathname));
 			this.setPath(path.join(this.getDir(),'manifest.json'));
 		} else {
@@ -167,9 +167,9 @@ component accessors=true {
 	public any function compile(files, callback) {
 	  var self = this;
 	  var paths = [];
-
+	  
 	  this.environment.eachLogicalPath(files, function (pathname) {
-	    paths.push(pathname);
+	    paths.add(pathname);
 	  });
 
 	  paths = _.union(paths, _.select(files, isAbsolute));

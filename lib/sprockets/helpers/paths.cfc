@@ -5,8 +5,8 @@
 * @type mixin
 */
 component accessors=true {
-	import "vendor.underscore";
-	import "vendor.hike.trail";
+	import "cf_modules.UnderscoreCF.underscore";
+	import "cf_modules.cf-hike.lib.trail";
 
 	property name="root"
 			type="string";

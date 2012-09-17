@@ -3,9 +3,9 @@
 * @hint 
 */
 component accessors=true {
-	import "vendor.Underscore";
-	import "vendor.Path";
-	import "vendor.hike.trail";
+	import "cf_modules.UnderscoreCF.Underscore";
+	import "cf_modules.cf-path.Path";
+	import "cf_modules.cf-hike.lib.trail";
 	import "version";
 	import "asset_attributes";
 	import "assets.*";
@@ -28,9 +28,9 @@ component accessors=true {
 			attr_with_expire_index('digestAlgorithm', 'md5');
 
 			attr_with_expire_index('version', '');
-			func_proxy_with_expire_index('prependPath');
-			func_proxy_with_expire_index('appendPath');
-			func_proxy_with_expire_index('clearPaths');
+			// func_proxy_with_expire_index('prependPath',this.prependPath);
+			// func_proxy_with_expire_index('appendPath',this.appendPath);
+			// func_proxy_with_expire_index('clearPaths',this.clearPaths);
 
 			//
 			// override [[Mime]] mixin methods
@@ -52,12 +52,12 @@ component accessors=true {
 			// override [[Processing]] mixin methods
 			//
 
-			func_proxy_with_expire_index('registerPreprocessor');
-			func_proxy_with_expire_index('registerPostprocessor');
-			func_proxy_with_expire_index('registerBundleProcessor');
-			func_proxy_with_expire_index('unregisterPreprocessor');
-			func_proxy_with_expire_index('unregisterPostprocessor');
-			func_proxy_with_expire_index('unregisterBundleProcessor');
+			func_proxy_with_expire_index('registerPreprocessor',this.registerPreprocessor);
+			func_proxy_with_expire_index('registerPostprocessor',this.registerPostprocessor);
+			func_proxy_with_expire_index('registerBundleProcessor',this.registerBundleProcessor);
+			func_proxy_with_expire_index('unregisterPreprocessor',this.unregisterPreprocessor);
+			func_proxy_with_expire_index('unregisterPostprocessor',this.unregisterPostprocessor);
+			func_proxy_with_expire_index('unregisterBundleProcessor',this.unregisterBundleProcessor);
 
 		return this;
 	}
@@ -79,21 +79,18 @@ component accessors=true {
 	  }
 	}
 
-	
-
-
 	function func_proxy_with_expire_index(name, func) {
-	  var orig = this[name];
+		var orig = this[name];
+		var theFunc = arguments.func;
+		this[name] = function() {
+			this.expireIndex();
 
-	  this[name] = function () {
-	    this.expireIndex();
-	    
-	    if (func) {
-	      func(argumentCollection=arguments);
-	    }
+			if (isDefined("theFunc")) {
+				theFunc(argumentCollection=arguments);
+			}
 
-	    orig(argumentCollection=arguments);
-	  };
+			orig(argumentCollection=arguments);
+		};
 	}
 
 	public any function getDigest() {

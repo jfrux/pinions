@@ -3,8 +3,9 @@
 * @hint 
 */
 component accessors=true {
-	import "vendor.underscore";
-	import "vendor.hike.trail";
+	import "cf_modules.UnderscoreCF.underscore";
+	import "cf_modules.cf-hike.lib.trail";
+	import "cf_modules.cf-mime.mime";
 
 	// internal cache
 	property name='__assets__'
@@ -21,7 +22,7 @@ component accessors=true {
 		variables.Sprockets = new lib.Sprockets();
 		this = _.extend(this,new base());
 		this.__trail__ = new Trail();
-		this["__mimeTypes__"] = new vendor.Mime();
+		this["__mimeTypes__"] = new Mime();
 		// append paths
 		_.each(Sprockets.paths, function (path) {
 			this.appendPath(path);

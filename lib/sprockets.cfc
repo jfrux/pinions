@@ -3,13 +3,14 @@
 * @hint A port of Sprockets(ruby) for Coldfusion
 */
 component {
-	import "vendor.*";
-	import "vendor.hike.*";
+	import "cf_modules.UnderscoreCF.underscore";
+	import "cf_modules.cf-hike.lib.*";
+	import "cf_modules.cf-path.path";
 	import "sprockets.helpers.*";
 	import "sprockets.engines.*";
 	import "sprockets.processors.*";
 	import "sprockets.*";
-	
+	import "cf_modules.cf-mime.mime";
 	// Main exported properties ////////////////////////////////////////////////////
 	property name="VERSION" type="string" getter=true setter=false;
 
@@ -43,7 +44,7 @@ component {
 		variables._ = new Underscore();
 		this["__trail__"] = new Trail('/');
 		this["__engines__"] = {};
-		this["__mimeTypes__"] = new vendor.Mime();
+		this["__mimeTypes__"] = new Mime();
 		this["__preProcessors__"] = {};
 		this["__postProcessors__"] = {};
 		this["__bundleProcessors__"] = {};
@@ -53,43 +54,43 @@ component {
 		/**
 		* this.EjsEngine -> EjsEngine
 		**/
-		this.EjsEngine = new ejs();
+		this['EjsEngine'] = new ejs();
 
 
 		/**
 		* this.HamlCoffeeEngine -> HamlCoffeeEngine
 		**/
-		this.HamlCoffeeEngine = new haml_coffee();
+		this['HamlCoffeeEngine'] = new haml_coffee();
 
 
 		/**
 		* this.JadeEngine -> JadeEngine
 		**/
-		this.JadeEngine = new jade();
+		this['JadeEngine'] = new jade();
 
 
 		/**
 		* this.JstEngine -> JstEngine
 		**/
-		this.JstEngine = new jst();
+		this['JstEngine'] = new jst();
 
 
 		/**
 		* this.LessEngine -> LessEngine
 		**/
-		this.LessEngine = new less();
+		this['LessEngine'] = new less();
 
 
 		/**
 		* this.StylusEngine -> StylusEngine
 		**/
-		this.StylusEngine = new stylus();
+		this['StylusEngine'] = new stylus();
 
 
 		/**
 		* this.CoffeeEngine -> CoffeeEngine
 		**/
-		this.CoffeeEngine = new coffee();
+		this['CoffeeEngine'] = new coffee();
 
 
 		// Processors //////////////////////////////////////////////////////////////////
@@ -98,25 +99,25 @@ component {
 		/**
 		* this.DebugComments -> DebugComments
 		**/
-		this.DebugComments = new debug_comments();
+		this['DebugComments'] = new debug_comments();
 
 
 		/**
 		* this.DirectiveProcessor -> DirectiveProcessor
 		**/
-		this.DirectiveProcessor = new directive_processor();
+		this['DirectiveProcessor'] = new directive_processor();
 
 
 		/**
 		* this.CharsetNormalizer -> CharsetNormalizer
 		**/
-		this.CharsetNormalizer = new charset_normalizer();
+		this['CharsetNormalizer'] = new charset_normalizer();
 
 
 		/**
 		* this.SafetyColons -> SafetyColons
 		**/
-		this.SafetyColons = new safety_colons();
+		this['SafetyColons'] = new safety_colons();
 
 
 		// Main exported classes ///////////////////////////////////////////////////////
@@ -125,25 +126,25 @@ component {
 		/**
 		* this.Environment -> Environment
 		**/
-		this.Environment = createObject("component","lib.sprockets.environment");
+		this['Environment'] = createObject("component","lib.sprockets.environment");
 
 
 		/**
 		* this.Manifest -> Manifest
 		**/
-		this.Manifest = createObject("component","lib.sprockets.manifest");
+		this['Manifest'] = createObject("component","lib.sprockets.manifest");
 
 
 		/**
 		* this.Template -> Template
 		**/
-		this.Template = new template();
+		this['Template'] = new template();
 
 
 		/**
 		* this.Server -> Server
 		**/
-		this.Server = new server();
+		this['Server'] = new server();
 
 
 		// Main exported functions /////////////////////////////////////////////////////
@@ -152,7 +153,7 @@ component {
 		/** alias of: Server.createServer
 		* this.createServer(environment[, manifest]) -> Function
 		**/
-		this.createServer = this.Server.createServer;
+		this['createServer'] = this.Server.createServer;
 
 
 

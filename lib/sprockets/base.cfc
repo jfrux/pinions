@@ -348,14 +348,13 @@ component accessors=true {
 	    }
 
 	    paths.add(pathname);
-
+	    writeDump(paths);
 	    if (directoryExists(pathname)) {
 	      self.eachEntry(pathname, function (subpath) {
 	        paths.add(subpath);
 	      });
 	    }
 	  });
-
 	  _.each(ArraySort(paths,"text"),iterator);
 	};
 

@@ -7,8 +7,8 @@ environment = new Environment();
 
 fullpath = getDirectoryFromPath(getCurrentTemplatePath())
 thisFolder = listlast(fullpath, "\/")
-
-manifest = sprock.Manifest.init(environment, thisFolder & '/public/assets');
+writeDump(expandPath("/" & thisFolder & '/public/assets'));
+manifest = sprock.Manifest.init(environment, expandPath("/" & thisFolder & '/public/assets'));
 
 manifest.compile(['application.js','application.css'],function(err,assetsData){
 	if(err) {

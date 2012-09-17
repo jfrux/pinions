@@ -2,21 +2,27 @@
 * @name Manifest.cfc
 * @hint 
 */
-component {
+component accessors=true {
 	import "vendor.underscore";
 	import "vendor.path";
 
 	property name="environment"
-	type="environment";
+	type="environment"
+	getter=true
+	setter=true;
 
 	property name="data"
 		type="struct";
 
 	property name="dir"
-			type="string";
+			type="string"
+			getter=true
+			setter=true;
 
 	property name="path"
-			type="string";
+			type="string"
+			getter=true
+			setter=true;
 
 	public any function init(environment,pathname) {
 		var data = {};
@@ -24,20 +30,20 @@ component {
 		variables.path = new Path();
 
 		this.environment = arguments.environment;
-
+		
 		if('' === path.extname(arguments.pathname)) {
-			this.dir = path.resolve(arguments.pathname);
-			this.path = path.join(this.dir,'manifest.json');
+			this.setDir(path.resolve(arguments.pathname));
+			this.setPath(path.join(this.getDir(),'manifest.json'));
 		} else {
-			this.dir = path.dirname(arguments.pathname);
-			this.path = path.resolve(arguments.pathname);
+			this.setDir(path.dirname(arguments.pathname));
+			this.setPath(path.resolve(arguments.pathname));
 		}
 
-		if(fileExists(this.path)) {
+		if(fileExists(this.getPath())) {
 			try {
 				data = deserializeJson(fileRead(this.path));
 			} catch (err) {
-				writeDump(var = this.path & " is invalid: " & err,abort = true);
+				writeDump(var = this.getPath() & " is invalid: " & err,abort = true);
 			}
 		}
 

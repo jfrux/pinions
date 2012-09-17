@@ -4,7 +4,9 @@
 * @hint 
 */
 component accessors=true {
-	import "vendor.underscore"
+
+	import "vendor.path";
+	import "vendor.underscore";
 
 	property name="searchPaths"
 				type="array";
@@ -29,6 +31,7 @@ component accessors=true {
 				setter=true;
 
 	public any function init(environment,pathname) {
+		variables.path = new Path();
 		variables._ = new Underscore();
 		this.setPathname(arguments.pathname);
 		this.setEnvironment(arguments.environment);
@@ -41,11 +44,11 @@ component accessors=true {
 		var path_without_extensions;
 
 		if ('index' !== path.basename(this.pathname, exts)) {
-			path_without_extensions = this.extensions.reduce(function (p, ext) {
-			  return p.replace(ext, '');
-		}, this.pathname);
+				path_without_extensions = this.extensions.reduce(function (p, ext) {
+				  return replace(p,ext, '','all');
+			}, this.pathname);
 
-		paths.push(path.join(path_without_extensions, "index" & exts));
+			paths.addAll(path.join(path_without_extensions, "index" & exts));
 		}
 
 		return paths;
@@ -57,7 +60,7 @@ component accessors=true {
 		var root_path = "";
 
 		root_path = _.detect(paths, function (root) {
-			return root === left(pathname,len(root));
+			return root = left(pathname,len(root));
 		});
 
 		if (!_.isEmpty(root_path)) {
@@ -66,12 +69,13 @@ component accessors=true {
 		}
 
 		pathname = replace(pathname,root_path & "/", "","all");
+
 		pathname = this.engineExtensions.reduce(function (p, ext) {
-		return p.replace(ext, "");
+			return replace(p,ext, "",'all');
 		}, pathname);
 
 		if (!this.formatExtension) {
-		pathname &= (this.engineFormatExtension || '');
+			pathname &= (this.engineFormatExtension || '');
 		}
 
 		return pathname;

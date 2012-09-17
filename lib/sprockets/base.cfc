@@ -199,6 +199,7 @@ component accessors=true {
 	* Returns a `AssetAttributes` for `pathname`
 	**/
 	public any function attributesFor(pathname) {
+		//writeDump(arguments.pathname);
 	  return new asset_attributes(this, arguments.pathname);
 	};
 
@@ -337,7 +338,7 @@ component accessors=true {
 
 	  _.each(this.entries(root),function (filename) {
 	    var pathname = path.join(root, filename);
-	    var stats = self.stat(pathname);
+	    var stats = getFileInfo(pathname);
 
 	    if (!isDefined('stats')) {
 	      // File not found - silently skip it.

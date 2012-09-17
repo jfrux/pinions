@@ -1,10 +1,11 @@
-import "vendor/path";
 /**
 * 
 * @name AssetAttributes
 * @hint 
 */
-component {
+component accessors=true {
+	import "vendor.underscore"
+
 	property name="searchPaths"
 				type="array";
 
@@ -15,8 +16,22 @@ component {
 	property name="extensions"
 				type="array";
 
+
+	property name="pathname"
+				type="string"
+				getter=true
+				setter=true;
+
+
+	property name="environment"
+				type="environment"
+				getter=true
+				setter=true;
+
 	public any function init(environment,pathname) {
-		
+		variables._ = new Underscore();
+		this.setPathname(arguments.pathname);
+		this.setEnvironment(arguments.environment);
 		return this;
 	}
 
@@ -30,33 +45,33 @@ component {
 			  return p.replace(ext, '');
 		}, this.pathname);
 
-		paths.push(path.join(path_without_extensions, "index" + exts));
+		paths.push(path.join(path_without_extensions, "index" & exts));
 		}
 
 		return paths;
 	}
 
 	public any function getLogicalPath() {
-		var pathname = this.pathname;
-		var paths = this.environment.paths;
-		var root_path;
+		var pathname = this.getPathname();
+		var paths = this.getEnvironment().paths;
+		var root_path = "";
 
 		root_path = _.detect(paths, function (root) {
-		return root === pathname.substr(0, root.length);
+			return root === left(pathname,len(root));
 		});
 
-		if (!root_path) {
-		throw new Error("File outside paths: " + pathname + " isn't in paths: " +
-		            paths.join(", "));
+		if (!_.isEmpty(root_path)) {
+		throw "File outside paths: " & pathname & " isn't in paths: " &
+		            ArrayToList(paths,",");
 		}
 
-		pathname = pathname.replace(root_path + "/", "");
+		pathname = replace(pathname,root_path & "/", "","all");
 		pathname = this.engineExtensions.reduce(function (p, ext) {
 		return p.replace(ext, "");
 		}, pathname);
 
 		if (!this.formatExtension) {
-		pathname += (this.engineFormatExtension || '');
+		pathname &= (this.engineFormatExtension || '');
 		}
 
 		return pathname;
@@ -68,7 +83,7 @@ component {
 		if (!this.__extensions__) {
 		extensions = path.basename(this.pathname).split('.').slice(1);
 		prop(this, '__extensions__', extensions.map(function (ext) {
-		  return "." + ext;
+		  return "." & ext;
 		}));
 		}
 

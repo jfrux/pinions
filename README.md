@@ -1,5 +1,4 @@
 #Pinions
-
 Pinions is a ColdFusion library for compiling and serving web assets. 
 
 It features declarative dependency management for JavaScript and CSS assets, 

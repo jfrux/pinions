@@ -1,0 +1,3 @@
+[submodule "cf_modules/hike"]
+	path = cf_modules/hike
+	url = git@github.com:JoshuaIRL/hike.git

@@ -1,3 +1,9 @@
 [submodule "cf_modules/hike"]
 	path = cf_modules/hike
 	url = git@github.com:JoshuaIRL/hike.git
+[submodule "cf_modules/foundry"]
+	path = cf_modules/foundry
+	url = git@github.com:JoshuaIRL/foundry.git
+[submodule "cf_modules/console"]
+	path = cf_modules/console
+	url = git@github.com:JoshuaIRL/console.git

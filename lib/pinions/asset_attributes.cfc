@@ -1,7 +1,7 @@
 /**
 * 
 * @name AssetAttributes
-* @hint 
+* @hint  test
 */
 component accessors=true {
 

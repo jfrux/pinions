@@ -7,3 +7,6 @@
 [submodule "cf_modules/console"]
 	path = cf_modules/console
 	url = git@github.com:JoshuaIRL/console.git
+[submodule "cf_modules/UnderscoreCF"]
+	path = cf_modules/UnderscoreCF
+	url = git://github.com/russplaysguitar/UnderscoreCF.git

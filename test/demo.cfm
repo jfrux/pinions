@@ -1,8 +1,8 @@
 <cfscript>
 import "lib.*";
 function runOnce( /* [ args ,]*/ ){
-	var sprockets = new sprockets();
-	var env = sprockets.Environment.init('/test/fixtures');
+	var pinions = new pinions();
+	var env = pinions.Environment.init('/test/fixtures');
 	
 	// // provide logger backend
 	// mincer.logger.use(console);
@@ -13,7 +13,7 @@ function runOnce( /* [ args ,]*/ ){
 	env.appendPath('vendor/assets/stylesheets');
 	env.appendPath('vendor/assets/javascripts');
 
-	var manifest = sprockets.Manifest.init(env, '/test/assets');
+	var manifest = pinions.Manifest.init(env, '/test/assets');
 
 	//var files = ['app.css', 'app.js', 'hundreds-of-files/test.js', 'issue-16.js', 'jade-lang.js', 'header.jpg', 'README.md'];
 	var files = ['app.css', 'app.js'];

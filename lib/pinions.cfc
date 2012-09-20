@@ -1,54 +1,41 @@
+import "lib.pinions.*";
 /** 
-* @name Sprockets.cfc
-* @hint A port of Sprockets(ruby) for Coldfusion
+* @name Pinions.cfc
 */
 component {
-	import "cf_modules.UnderscoreCF.underscore";
-	import "cf_modules.cf-hike.lib.*";
-	import "cf_modules.cf-path.path";
-	import "sprockets.helpers.*";
-	import "sprockets.engines.*";
-	import "sprockets.processors.*";
-	import "sprockets.*";
-	import "cf_modules.cf-mime.mime";
-	// Main exported properties ////////////////////////////////////////////////////
 	property name="VERSION" type="string" getter=true setter=false;
 
-	this.VERSION = new sprockets.version();
-
-
-	/** read-only
-	* this.logger -> Logger
-	**/
 	property name="logger"
-		type="sprockets.logger"
+		type="pinions.logger"
 		getter=true
 		setter=false;
-
-	this.logger = new sprockets.logger();
-
 
 	// Spicy Sauce :)) /////////////////////////////////////////////////////////////
 
 	// main internal properties.
 	// each new environment clone these properties for initial states,
 	// so they can be used to set "defaults" for all environment instances.
-	property name="__trail__" type="vendor.hike.trail";
+	property name="__trail__" type="trail";
 	property name="__engines__";
 	property name="__mimeTypes__" type="struct";
 	property name="__preProcessors__" type="struct";
 	property name="__postProcessors__" type="struct";
 	property name="__bundleProcessors__" type="struct";
 
+
+	this.VERSION = new pinions.version();
+	//this.logger = new pinions.logger();
+
+
 	public any function init() {
 		variables._ = new Underscore();
 		this["__trail__"] = new Trail('/');
 		this["__engines__"] = {};
-		this["__mimeTypes__"] = new Mime();
+		this["__mimeTypes__"] = new cf_modules.mime.Mime();
 		this["__preProcessors__"] = {};
 		this["__postProcessors__"] = {};
 		this["__bundleProcessors__"] = {};
-		this.paths = [];
+		this['paths'] = [];
 
 		// Engines /////////////////////////////////////////////////////////////////////
 		/**
@@ -126,13 +113,13 @@ component {
 		/**
 		* this.Environment -> Environment
 		**/
-		this['Environment'] = createObject("component","lib.sprockets.environment");
+		this['Environment'] = createObject("component","lib.environment");
 
 
 		/**
 		* this.Manifest -> Manifest
 		**/
-		this['Manifest'] = createObject("component","lib.sprockets.manifest");
+		this['Manifest'] = createObject("component","lib.manifest");
 
 
 		/**

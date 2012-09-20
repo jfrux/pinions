@@ -3,9 +3,6 @@
 * @hint 
 */
 component accessors=true {
-	import "cf_modules.UnderscoreCF.underscore";
-	import "cf_modules.cf-hike.lib.trail";
-	import "cf_modules.cf-mime.mime";
 
 	// internal cache
 	property name='__assets__'

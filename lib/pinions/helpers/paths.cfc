@@ -1,21 +1,28 @@
+import "cf_modules.foundry.*";
+import "cf_modules.hike.lib.*";
+import "cf_modules.console.*";
+import "cf_modules.underscorecf.*";
+import "helpers.*";
+import "engines.*";
+import "processors.*";
+
 /**
+* 
 * @name Paths.cfc
 * @hint An internal mixin whose public methods are exposed on the [[Environment]] and [[Index]] classes.<br/>Provides helpers to work with `Hike.Trail` instance. 
 * @usage internal 
 * @type mixin
 */
 component accessors=true {
-	import "cf_modules.UnderscoreCF.underscore";
-	import "cf_modules.cf-hike.lib.trail";
-
 	property name="root"
 			type="string";
+
 	property name="paths"
 			type="any"
 			default="";
+
 	property name="__trail__"
 			type="any";
-
 	public any function init() {
 		variables._ = new Underscore();
 		this.paths = [];

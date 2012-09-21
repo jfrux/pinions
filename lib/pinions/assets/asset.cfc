@@ -3,23 +3,22 @@
  *
  *  The base class for [[BundledAsset]], [[ProcessedAsset]] and [[StaticAsset]].
  **/
+component name="Asset" extends="Foundry.Module" {
+	property name='root' type="string";//          environment.root);
+	property name='environment' type="string";//   environment);
+	property name='logicalPath' type="string";//   logicalPath);
+	property name='pathname' type="string";//      pathname);
+	property name='contentType' type="string";//   environment.contentTypeOf(pathname));
+	property name='mtime' type="string";//         environment.stat(pathname).mtime, {writable: true});
+	property name='length' type="string";//        environment.stat(pathname).size, {writable: true});
+	property name='digest' type="string";//        environment.getFileDigest(pathname), {writable: true});
+	property name='__requiredAssets__' type="string";//  [], {writable: true});
+	property name='__dependencyPaths__' type="string";// [], {writable: true});
 
-component name="Asset" {
-	public any function init() {
+	public any function init(environment, logicalPath, pathname) {
 		
 		return this;
 	}
-
-	// stdlib
-	var fs    = require('fs');
-	var path  = require('path');
-	var zlib  = require('zlib');
-
-
-	// 3rd-party
-	var async   = require('async');
-	var fstools = require('fs-tools');
-
 
 	// internal
 	var noop    = require('../common').noop;
@@ -36,18 +35,8 @@ component name="Asset" {
 	 *  - logicalPath (String)
 	 *  - pathname (String)
 	 **/
-	var Asset = module.exports = function Asset(environment, logicalPath, pathname) {
-	  prop(this, 'root',          environment.root);
-	  prop(this, 'environment',   environment);
-	  prop(this, 'logicalPath',   logicalPath);
-	  prop(this, 'pathname',      pathname);
-	  prop(this, 'contentType',   environment.contentTypeOf(pathname));
-	  prop(this, 'mtime',         environment.stat(pathname).mtime, {writable: true});
-	  prop(this, 'length',        environment.stat(pathname).size, {writable: true});
-	  prop(this, 'digest',        environment.getFileDigest(pathname), {writable: true});
-
-	  prop(this, '__requiredAssets__',  [], {writable: true});
-	  prop(this, '__dependencyPaths__', [], {writable: true});
+	function Asset(environment, logicalPath, pathname) {
+	  
 	};
 
 
@@ -56,7 +45,7 @@ component name="Asset" {
 	  getter(Asset.prototype, name, function () {
 	    // this should never happen, as Asset is an abstract class and not
 	    // supposed to be used directly. subclasses must override this getters
-	    throw new Error(this.constructor.name + "#" + name + " getter is not implemented.");
+	    throw this.constructor.name & name & " getter is not implemented.";
 	  });
 	}
 
@@ -85,9 +74,9 @@ component name="Asset" {
 	 *      "foo/bar-ce09b59f734f7f5641f2962a5cf94bd1.js"
 	 **/
 	getter(Asset.prototype, 'digestPath', function () {
-	  var ext = path.extname(this.logicalPath),
-	      sfx = '-' + this.digest + ext;
-	  return this.logicalPath.replace(new RegExp(ext + '$'), sfx);
+	  var ext = path.extname(this.logicalPath);
+	  var sfx = '-' & this.digest & ext;
+	  return this.logicalPath.replace(new RegExp(ext & '$'), sfx);
 	});
 
 
@@ -213,10 +202,10 @@ component name="Asset" {
 	 *  or `filename` matches `*.gz` pattern.
 	 **/
 	Asset.prototype.writeTo = function (filename, options, callback) {
-	  var self     = this,
-	      mtime    = this.mtime,
-	      tempname = filename + "+",
-	      copy_fn;
+	  var self     = this;
+	  var mtime    = this.mtime;
+	 var tempname = filename & "+";
+	   var copy_fn = function() {};
 
 	  options = options || {};
 
@@ -247,17 +236,14 @@ component name="Asset" {
 	 *
 	 *  Compiles asset and fires `callback(err, asset)` once it was compiled.
 	 **/
-	Asset.prototype.compile = function (callback) {
-	  (callback || noop)(null, this);
+	public void function compile(callback) {
+		if(structKeyExists(arguments,'callback')) {
+			callback(null, this)
+		} else {
+
+		}
 	};
 
-
-	/**
-	 *  Asset#isCompiled -> Boolean
-	 *
-	 *  Reflects whenever asset is compiled or not.
-	 **/
-	stub_getter('isCompiled');
 
 
 	/*:nodoc:*
@@ -266,10 +252,17 @@ component name="Asset" {
 	 *  Dummy helper that throws an exception when called the time
 	 *  [[Asset#isCompiled]] is false.
 	 **/
-	Asset.prototype._requireCompilation = function (name) {
+	public any function  _requireCompilation(name) {
 	  if (!this.isCompiled) {
 	    throw new Error("Can't get " + name + ": asset was not compiled yet.");
 	  }
 	};
+	/**
+	 *  Asset#isCompiled -> Boolean
+	 *
+	 *  Reflects whenever asset is compiled or not.
+	 **/
+	stub_getter('isCompiled');
+
 
 }

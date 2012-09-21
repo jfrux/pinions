@@ -1,8 +1,18 @@
-/*
-* @name Base.cfc
-* @hint 
-*/
-component accessors=true {
+/** internal
+ *  class Base
+ *
+ *  Base class for [[Environment]] and [[Index]].
+ *
+ *
+ *  ##### INCLUDES
+ *
+ *  - [[Engines]]
+ *  - [[Mime]]
+ *  - [[Processing]]
+ *  - [[Paths]]
+ **/
+ 
+component name="Base" accessors=true {
 	import "cf_modules.UnderscoreCF.Underscore";
 	import "cf_modules.cf-path.Path";
 	import "cf_modules.cf-hike.lib.trail";

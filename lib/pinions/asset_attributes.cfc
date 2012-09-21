@@ -1,12 +1,13 @@
-/**
-* 
-* @name AssetAttributes
-* @hint  
-*/
-component accessors=true {
+/** internal
+ *  class AssetAttributes
+ *
+ *  `AssetAttributes` is a wrapper similar to Ruby's `Pathname` that provides
+ *  some helper accessors.
+ *
+ *  These methods should be considered internalish.
+ **/
 
-	import "vendor.path";
-	import "vendor.underscore";
+component name="Asset_attributes" extends="vendor.foundry" {
 
 	property name="searchPaths"
 				type="array";

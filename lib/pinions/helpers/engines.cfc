@@ -1,10 +1,37 @@
-/**
-* @name Engines.cfc
-* @hint
-* @usage internal 
-* @type mixin
-*/
-component accessors=true {
+/** internal
+ *  mixin Engines
+ *
+ *  An internal mixin whose public methods are exposed on the [[Environment]]
+ *  and [[Index]] classes.
+ *
+ *  An engine is a type of processor that is bound to an filename
+ *  extension. `application.js.coffee` indicates that the
+ *  [[engines.coffee]] engine will be ran on the file.
+ *
+ *  Extensions can be stacked and will be evaulated from right to
+ *  left. `application.js.coffee.ejs` will first run `EjsEngine`
+ *  then [[engines.coffee]].
+ *
+ *  All `Engine`s must follow the [[Template]] interface. It is
+ *  recommended to subclass [[Template]].
+ *
+ *  Its recommended that you register engine changes on your local
+ *  `Environment` instance.
+ *
+ *      environment.registerEngine('.foo', FooProcessor);
+ *
+ *  The global registry is exposed for plugins to register themselves.
+ *
+ *      Mincer.registerEngine('.ejs', EjsEngine);
+ **/
+
+
+// REQUIRED PROPERTIES /////////////////////////////////////////////////////////
+//
+// - `__engines__` (Object)
+//
+////////////////////////////////////////////////////////////////////////////////
+component name="Engines" accessors=true {
 	/**
 	* Engines#engineExtensions -> Array
 	*

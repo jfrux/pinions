@@ -1,8 +1,15 @@
 /**
-* @name Environment.cfc
-* @hint 
-*/
-component accessors=true {
+ *  class Environment
+ *
+ *  The heart of `Mincer`. Stores registered paths, engines, processors, etc.
+ *
+ *
+ *  ##### SUBCLASS OF
+ *
+ *  [[Base]]
+ **/
+
+component name="Environment" extends="Base" accessors=true {
 
 	// internal cache
 	property name='__assets__'

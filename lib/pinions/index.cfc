@@ -1,8 +1,23 @@
-/**
-* @name Index.cfc
-* @hint 
-*/
-component accessors=true {
+/** internal
+ *  class Index
+ *
+ *  `Index` is a special cached version of [[Environment]].
+ *
+ *  The expection is that all of its file system methods are cached
+ *  for the instances lifetime. This makes `Index` much faster. This
+ *  behavior is ideal in production environments where the file system
+ *  is immutable.
+ *
+ *  `Index` should not be initialized directly. Instead use
+ *  [[Environment.index]].
+ *
+ *
+ *  ##### SUBCLASS OF
+ *
+ *  [[Base]]
+ **/
+
+component name="Index" extends="Base" accessors=true {
 	import "vendor.underscore";
 	import "vendor.hike.trail";
 

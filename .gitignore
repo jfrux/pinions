@@ -1,3 +1,4 @@
-WEB-INF/*
+WEB-INF
 *.sublime-project
 *.sublime-workspace
+foundry_modules

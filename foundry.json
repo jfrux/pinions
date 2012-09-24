@@ -2,9 +2,10 @@
 	"name": "pinions",
 	"description":"",
 	"version": "0.0.1",
-	"main":"./lib/main",
+	"main":"./lib/pinions",
 	"author": "Joshua F. Rountree",
 	"dependencies":{
-		"UnderscoreCF":"~>0.0.0"
+		"UnderscoreCF":"~>0.0.0",
+		"hike":"~>0.0.0"
 	}
 }

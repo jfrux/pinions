@@ -1,8 +1,8 @@
-import "lib.pinions.*";
 /** 
 * @name Pinions.cfc
+* @extends foundry.core
 */
-component {
+component extends="foundry.core" {
 	property name="VERSION" type="string" getter=true setter=false;
 
 	property name="logger"
@@ -28,10 +28,11 @@ component {
 
 
 	public any function init() {
-		variables._ = new Underscore();
-		this["__trail__"] = new Trail('/');
+		variables._ = require("underscorecf").init();
+		variables.hike = require("hike");
+		this["__trail__"] = hike.trail;
 		this["__engines__"] = {};
-		this["__mimeTypes__"] = new cf_modules.mime.Mime();
+		this["__mimeTypes__"] = require("mime");
 		this["__preProcessors__"] = {};
 		this["__postProcessors__"] = {};
 		this["__bundleProcessors__"] = {};
@@ -41,43 +42,43 @@ component {
 		/**
 		* this.EjsEngine -> EjsEngine
 		**/
-		this['EjsEngine'] = new ejs();
+		this['EjsEngine'] = require("./pinions/engines/ejs");
 
 
 		/**
 		* this.HamlCoffeeEngine -> HamlCoffeeEngine
 		**/
-		this['HamlCoffeeEngine'] = new haml_coffee();
+		this['HamlCoffeeEngine'] = require("./pinions/engines/haml_coffee");
 
 
 		/**
 		* this.JadeEngine -> JadeEngine
 		**/
-		this['JadeEngine'] = new jade();
+		this['JadeEngine'] = require("./pinions/engines/jade");
 
 
 		/**
 		* this.JstEngine -> JstEngine
 		**/
-		this['JstEngine'] = new jst();
+		this['JstEngine'] = require("./pinions/engines/jst");
 
 
 		/**
 		* this.LessEngine -> LessEngine
 		**/
-		this['LessEngine'] = new less();
+		this['LessEngine'] = require("./pinions/engines/less");
 
 
 		/**
 		* this.StylusEngine -> StylusEngine
 		**/
-		this['StylusEngine'] = new stylus();
+		this['StylusEngine'] = require("./pinions/engines/stylus");
 
 
 		/**
 		* this.CoffeeEngine -> CoffeeEngine
 		**/
-		this['CoffeeEngine'] = new coffee();
+		this['CoffeeEngine'] = require("./pinions/engines/coffee");
 
 
 		// Processors //////////////////////////////////////////////////////////////////
@@ -86,25 +87,25 @@ component {
 		/**
 		* this.DebugComments -> DebugComments
 		**/
-		this['DebugComments'] = new debug_comments();
+		this['DebugComments'] = require("./processors/debug_comments");
 
 
 		/**
 		* this.DirectiveProcessor -> DirectiveProcessor
 		**/
-		this['DirectiveProcessor'] = new directive_processor();
+		this['DirectiveProcessor'] = require("./processors/directive_processor");
 
 
 		/**
 		* this.CharsetNormalizer -> CharsetNormalizer
 		**/
-		this['CharsetNormalizer'] = new charset_normalizer();
+		this['CharsetNormalizer'] = require("./processors/charset_normalizer");
 
 
 		/**
 		* this.SafetyColons -> SafetyColons
 		**/
-		this['SafetyColons'] = new safety_colons();
+		this['SafetyColons'] = require("./processors/safety_colons");
 
 
 		// Main exported classes ///////////////////////////////////////////////////////
@@ -113,25 +114,25 @@ component {
 		/**
 		* this.Environment -> Environment
 		**/
-		this['Environment'] = createObject("component","lib.environment");
+		this['Environment'] = require("lib/environment");
 
 
 		/**
 		* this.Manifest -> Manifest
 		**/
-		this['Manifest'] = createObject("component","lib.manifest");
+		this['Manifest'] = require("lib/manifest");
 
 
 		/**
 		* this.Template -> Template
 		**/
-		this['Template'] = new template();
+		this['Template'] = require("lib/template");
 
 
 		/**
 		* this.Server -> Server
 		**/
-		this['Server'] = new server();
+		this['Server'] = require("lib/server");
 
 
 		// Main exported functions /////////////////////////////////////////////////////

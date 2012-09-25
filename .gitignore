@@ -1,4 +1,4 @@
 WEB-INF
 *.sublime-project
 *.sublime-workspace
-foundry_modules
+*.DS_Store

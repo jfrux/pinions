@@ -10,3 +10,6 @@
 [submodule "cf_modules/UnderscoreCF"]
 	path = cf_modules/UnderscoreCF
 	url = git://github.com/russplaysguitar/UnderscoreCF.git
+[submodule "foundry_modules/hike"]
+	path = foundry_modules/hike
+	url = git@github.com:joshuairl/hike

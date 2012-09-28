@@ -1,0 +1,7 @@
+{
+	"name": "mime",
+	"description":"handles mimetypes n stuff...",
+	"version": "0.0.1",
+	"main":"./mime",
+	"author": "Joshua F. Rountree"
+}

@@ -1,0 +1,10 @@
+{
+	"name": "hike",
+	"description":"",
+	"version": "0.0.1",
+	"main":"./lib/hike",
+	"author": "Joshua F. Rountree",
+	"dependencies":{
+		"UnderscoreCF":"~>0.0.0"
+	}
+}
